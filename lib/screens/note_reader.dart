@@ -23,12 +23,13 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
           style: GoogleFonts.roboto(
               fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
         ),
+        
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
           icon: Icon(
-            Icons.arrow_back_ios_outlined,
+            Icons.close,
             size: 30,
           ),
           color: AppStyle.mainColor,

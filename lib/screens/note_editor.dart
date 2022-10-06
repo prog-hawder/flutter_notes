@@ -30,7 +30,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             Navigator.pop(context);
           },
         
-          icon: Icon(Icons.arrow_back_ios_outlined, size: 30,),
+          icon: Icon(Icons.close, size: 30,),
           color: AppStyle.mainColor,
         ),
           centerTitle: true,
