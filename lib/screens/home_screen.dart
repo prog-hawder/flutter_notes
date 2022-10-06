@@ -4,7 +4,6 @@ import 'package:flutter_notes/screens/note_editor.dart';
 import 'package:flutter_notes/screens/note_reader.dart';
 import 'package:flutter_notes/widgets/note_card.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../style/app_style.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppStyle.mainColor,
       appBar: AppBar(
           elevation: 0.0,
-          title: Text("Notes"),
+          title: Text("Notes", style: AppStyle.mainTitle,),
           centerTitle: true,
           backgroundColor: AppStyle.mainColor),
       body: Padding(
@@ -30,21 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Notas recentes",
-              style: GoogleFonts.roboto(
-                color: Colors.white,
-                fontWeight: FontWeight.w300,
-                fontSize: 18,
-              ),
-            ),
             SizedBox(
               height: 20.0,
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream:
-                    FirebaseFirestore.instance().collection("Notes").snapshots(),
+                    FirebaseFirestore.instance.collection("Notes").snapshots(),
                 builder: (context, AsyncSnapshot <QuerySnapshot> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -73,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: (){
           Navigator.push(
             context,
@@ -81,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context) => 
                 NoteEditorScreen()));
         }, 
-        label: Icon(Icons.add_rounded),  
+        child: Icon(Icons.add_rounded, color: AppStyle.mainColor,),
+        backgroundColor: AppStyle.accentColor,  
         ),
     );
   }

@@ -1,7 +1,9 @@
-import 'dart:math';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../style/app_style.dart';
 
@@ -13,19 +15,26 @@ class NoteEditorScreen extends StatefulWidget {
 }
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
-  int color_id = Random().nextInt(AppStyle.cardsColor.length);
-  String date = DateTime.now().toString();
+  String date = DateFormat.yMEd().add_jms().format(DateTime.now()).toString();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _mainController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppStyle.cardsColor[color_id],
+        backgroundColor: AppStyle.accentColor,
         appBar: AppBar(
-          backgroundColor: AppStyle.cardsColor[color_id],
+          backgroundColor: AppStyle.accentColor,
           elevation: 0.0,
-          iconTheme: IconThemeData(color: Colors.black),
-          title: Text("Add a new note",
+          leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        
+          icon: Icon(Icons.arrow_back_ios_outlined, size: 30,),
+          color: AppStyle.mainColor,
+        ),
+          centerTitle: true,
+          title: Text("New Note",
           style: TextStyle(color: Colors.black),),
         ),
         body: Padding(
@@ -36,10 +45,19 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               TextField(
                 controller: _titleController,
                 decoration: InputDecoration(
-                  border: InputBorder.none,
+                  fillColor: AppStyle.mainColor,
+                  filled: true,
+                   enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(18.0))
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                    borderSide: BorderSide(color: AppStyle.accentColor)
+                  ),
                   hintText: "Note Title",
+                  hintStyle:  TextStyle(color: AppStyle.accentColor, fontSize: 16),
                 ),
-                style: AppStyle.mainTitle,
+                style: GoogleFonts.roboto(fontSize: 20.0, fontWeight: FontWeight.bold, color: AppStyle.accentColor),
               ),
               SizedBox(
                 height: 8.0,
@@ -48,34 +66,43 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               SizedBox(
                 height: 28.0,
               ),
-              TextField(
-                controller: _mainController,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Note",
-                ),
-                style: AppStyle.mainContent,
-              ),
+               Container(
+                 child: TextField(
+                    controller: _mainController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                       fillColor: AppStyle.mainColor,
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(18.0))
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      borderSide: BorderSide(color: AppStyle.accentColor)
+                    ),
+                      hintText: "Note",
+                      hintStyle:  TextStyle(color: AppStyle.accentColor, fontSize: 16),
+                    ),
+                    style: GoogleFonts.roboto(fontSize: 20.0, fontWeight: FontWeight.normal, color: AppStyle.accentColor),
+                  ),
+               ),
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: AppStyle.accentColor,
           onPressed: () async{
-            FirebaseFirestore.instance().collection("Notes").add({
+            FirebaseFirestore.instance.collection("Notes").doc(_titleController.text).set({
               "notes_title": _titleController.text,
               "creation_date": date,
               "note_content" : _mainController.text,
-              "color_id" : color_id
-            }). then((value) {
-              print(value.id);
-              Navigator.pop(context);
-            }).catchError(
-              (error) => print("Filed to add new Note due to $error"));
-          },
-          child: Icon(Icons.save_rounded),),
+            });
+             Navigator.pop(context);},
+             child: Icon(Icons.save_alt_rounded,
+          color: AppStyle.mainColor,),
+             
+      )
       );
   }
 }
